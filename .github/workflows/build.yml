@@ -102,13 +102,13 @@ jobs:
 
       - name: Write Summary.md
         run: |
-        cd ./paper-translation/src
-        echo "# Summary" > Summary.md
-        find . -maxdepth 1 ! -name "Summary.md" ! -name "." ! -name "chapter_1.md" -print | sort | while read filename; do 
-          clean_name="${filename:2}" 
-          echo "- [$clean_name]($filename/$clean_name.md)" >> Summary.md
-        done 
-        cat Summary.md
+          cd ./paper-translation/src
+          echo "# Summary" > Summary.md
+          find . -maxdepth 1 ! -name "Summary.md" ! -name "." ! -name "chapter_1.md" -print | sort | while read filename; do 
+            clean_name="${filename:2}" 
+            echo "- [$clean_name]($filename/$clean_name.md)" >> Summary.md
+          done 
+          cat Summary.md
 
       - name: Build mdbook
         run: | 

@@ -40,17 +40,31 @@ jobs:
           ORGANIZATION="cyman-paper-translation"
           
           # 获取组织中的仓库列表
-          REPOS=$(curl -s -H "Authorization: token $AUTH_TOKEN" \
+          # REPOS=$(curl -s -H "Authorization: token $AUTH_TOKEN" \
                    "https://api.github.com/orgs/$ORGANIZATION/repos?per_page=100" | \
                    jq -r '.[].full_name')
           
-          for REPO in $REPOS; do
-            echo "Repository: $REPO"
-            # 读取仓库内容
-            CONTENT=$(curl -s -H "Authorization: token $AUTH_TOKEN" \
-                      "https://api.github.com/repos/$REPO/contents")
-            echo "$CONTENT"
-          done
+          # 获取组织中的仓库的 Clone URL
+          curl -s -H "Authorization: token $AUTH_TOKEN" \
+                   "https://api.github.com/orgs/$ORGANIZATION/repos?per_page=100" | \
+                   jq -r '.[].clone_url' > repos_clone_url.txt 
+          
+          cat repos_clone_url.txt
+      
+      - name: Upload Repo Clone Url
+        uses: actions/upload-artifact@v2
+        with:
+          name: repo-artifact
+          path: repos_clone_url.txt
+
+          # for REPO in $REPOS; do
+          # # echo "Repository: $REPO"
+          # # 读取仓库内容
+          # CONTENT=$(curl -s -H "Authorization: token $AUTH_TOKEN" \
+          #             "https://api.github.com/repos/$REPO/contents")
+          #   echo "$CONTENT"
+          # done
+          
 
   build-mdbook:
     runs-on: ubuntu-latest
@@ -67,17 +81,31 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
-      - name: Build with mdBook
+      - name: Init mdBook
         run: | 
           mkdir paper-translation
           cd paper-translation
           mdbook init --title paper-translation --ignore git
-          # todo, organize all of the paper translations
-          # 
+
+      - name: Download Repo Clone Url
+        uses: actions/download-artifact@v2
+        with:
+          name: repo-artifact
+
+      - name: Clone All the Repos
+        run: |
+          pwd 
+          cat repos_clone_url.txt
+          cd paper-translation
+          # todo, clone all the repos
+          # cd src
+          # cat ../../paper-translation | xargs -L1 git clone
+
+      - name: Build mdbook
+        run: | 
+          cd paper-translation
           mdbook build
-          pwd
-      - name: Print Work Path
-        run: pwd
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

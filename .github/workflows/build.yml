@@ -43,19 +43,6 @@ jobs:
           # REPOS=$(curl -s -H "Authorization: token $AUTH_TOKEN" \
           #         "https://api.github.com/orgs/$ORGANIZATION/repos?per_page=100" | \
           #         jq -r '.[].full_name')
-          
-          # 获取组织中的仓库的 Clone URL
-          curl -s -H "Authorization: token $AUTH_TOKEN" \
-                   "https://api.github.com/orgs/$ORGANIZATION/repos?per_page=100" | \
-                   jq -r '.[].clone_url' > repos_clone_url.txt 
-          
-          cat repos_clone_url.txt
-      
-      - name: Upload Repo Clone Url
-        uses: actions/upload-artifact@v2
-        with:
-          name: repo-artifact
-          path: repos_clone_url.txt
 
           # for REPO in $REPOS; do
           # # echo "Repository: $REPO"
@@ -64,6 +51,19 @@ jobs:
           #             "https://api.github.com/repos/$REPO/contents")
           #   echo "$CONTENT"
           # done
+
+          # 获取组织中的仓库的 Clone URL
+          curl -s -H "Authorization: token $AUTH_TOKEN" \
+                   "https://api.github.com/orgs/$ORGANIZATION/repos?per_page=100" | \
+                   jq -r '.[].clone_url' > repos_clone_url.txt 
+          
+          cat repos_clone_url.txt
+
+      - name: Upload Repo Clone Url
+        uses: actions/upload-artifact@v2
+        with:
+          name: repo-artifact
+          path: repos_clone_url.txt   
           
 
   build-mdbook:
@@ -98,8 +98,9 @@ jobs:
           cat repos_clone_url.txt
           cd paper-translation
           # todo, clone all the repos
-          # cd src
-          # cat ../../paper-translation | xargs -L1 git clone
+          cd src
+          cat ../../repos_clone_url.txt | xargs -L1 git clone
+          ls 
 
       - name: Build mdbook
         run: | 

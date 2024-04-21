@@ -96,11 +96,19 @@ jobs:
         run: |
           pwd 
           cat repos_clone_url.txt
-          cd paper-translation
-          # todo, clone all the repos
-          cd src
+          cd ./paper-translation/src
           cat ../../repos_clone_url.txt | xargs -L1 git clone
           ls 
+
+      - name: Write Summary.md
+        run: |
+        cd ./paper-translation/src
+        echo "# Summary" > Summary.md
+        find . -maxdepth 1 ! -name "Summary.md" ! -name "." ! -name "chapter_1.md" -print | sort | while read filename; do 
+          clean_name="${filename:2}" 
+          echo "- [$clean_name]($filename/$clean_name.md)" >> Summary.md
+        done 
+        cat Summary.md
 
       - name: Build mdbook
         run: | 

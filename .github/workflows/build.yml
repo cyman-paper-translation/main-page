@@ -41,8 +41,8 @@ jobs:
           
           # 获取组织中的仓库列表
           # REPOS=$(curl -s -H "Authorization: token $AUTH_TOKEN" \
-                   "https://api.github.com/orgs/$ORGANIZATION/repos?per_page=100" | \
-                   jq -r '.[].full_name')
+          #         "https://api.github.com/orgs/$ORGANIZATION/repos?per_page=100" | \
+          #         jq -r '.[].full_name')
           
           # 获取组织中的仓库的 Clone URL
           curl -s -H "Authorization: token $AUTH_TOKEN" \

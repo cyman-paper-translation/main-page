@@ -111,6 +111,7 @@ jobs:
           cat SUMMARY.md
 
       - name: Add utterances 
+        run: |
           find . -maxdepth 1 ! -name "SUMMARY.md" ! -name "." ! -name "chapter_1.md" -print | sort | while read filename; do 
             clean_name="${filename:2}" 
             echo "<script" >> $filename/$clean_name.md

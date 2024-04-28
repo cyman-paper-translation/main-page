@@ -118,7 +118,7 @@ jobs:
             echo '<script' >> $filename/$clean_name.md
             echo '        src="https://utteranc.es/client.js"' >> $filename/$clean_name.md
             echo '        repo="cyman-paper-translation/main-page"' >> $filename/$clean_name.md
-            echo '        issue-term="$clean_name"' >> $filename/$clean_name.md
+            echo "        issue-term=\"$clean_name\"" >> $filename/$clean_name.md
             echo '        theme="github-light"' >> $filename/$clean_name.md
             echo '        crossorigin="anonymous"' >> $filename/$clean_name.md
             echo '        async' >> $filename/$clean_name.md

@@ -110,6 +110,21 @@ jobs:
           done 
           cat SUMMARY.md
 
+      - name: Add utterances 
+          find . -maxdepth 1 ! -name "SUMMARY.md" ! -name "." ! -name "chapter_1.md" -print | sort | while read filename; do 
+            clean_name="${filename:2}" 
+            echo "<script" >> $filename/$clean_name.md
+            echo "        src=\"https://utteranc.es/client.js\"" >> $filename/$clean_name.md
+            echo "        repo=\"cyman-paper-translation/main-page\"" >> $filename/$clean_name.md
+            echo "        issue-term=\"$clean_name\"" >> $filename/$clean_name.md
+            echo "        theme=\"github-light"" >> $filename/$clean_name.md
+            echo "        crossorigin=\"anonymous\"" >> $filename/$clean_name.md
+            echo "        async" >> $filename/$clean_name.md
+            echo "        >" >> $filename/$clean_name.md
+            echo "</script>" >> $filename/$clean_name.md
+
+          done 
+
       - name: Build mdbook
         run: | 
           cd paper-translation
